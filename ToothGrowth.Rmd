@@ -47,7 +47,7 @@ unique(ToothGrowth$supp)
 unique(ToothGrowth$dose)
 ```
 
-### Plot 1: Boxplot
+### Boxplot: Length of tooth for different supplements & dosing levels
 With a limited number of variables, the boxplot provides a good vehicle to illustrate the data.  Not only only can we  compare tooth lenght by supplement (supp) and dose, we capture insight to the range of values (length) for each combination of supplement and dose.
 ```{r plot1_scatterplot, fig.keep = "high", fig.show = "asis", fig.path = 'figure/'}
 ggplot(ToothGrowth, aes(x = supp, y = len)) +
@@ -56,6 +56,57 @@ ggplot(ToothGrowth, aes(x = supp, y = len)) +
 ```
 
 Looking at information from the exploratory data analysis, there are two key observations: 1) higher doses produce greater tooth growth; and 2) 'OJ' produces tooth growth equal to or better than 'VC' at all observed dose levels, particularly at lower doses. As there are 10 observations for each supp-dose combination, we will use T-statistics to evaluate whether 'OJ' results are significantly better th 'VC' and whether dose levels produce materially different growth.
+
+
+## Confidence Intervals & Hypothosis Testing
+As previously stated, there are two variables of interest, supplement('VC', 'OJ') and dose(0.5, 1.0, and 2.0).  Our initial testing will be to look at the supplement.  There may be two questions to be answered here.  First, does 'OJ' promote greater tooth growth than 'VC'?  This would be across all dosing levels.  Once we answer this question, we may want to evaluate the supplement within each dosing level.
+
+### T-test: Difference in Tooth Growth by Supplement
+The first step is to split data by supplement('supp').  We will use the t.test() function in R to evaluate whether the tooth length is longer when the supplement 'OJ' is used compared to 'VC' across all dose levels.
+```{r supp_ttl_difference, include = TRUE, echo = TRUE, results = "asis"}
+vc_ttl <- select(subset(ToothGrowth, supp == "VC"), supp, len)
+oj_ttl <- select(subset(ToothGrowth, supp == "OJ"), supp, len)
+
+t.test(vc_ttl$len,oj_ttl$len, paired = FALSE, var.equal = FALSE)
+```
+
+The result of this test is that t = -1.9153 falls within the 95% confidence interval of [-7.5710156, 0.1710156].  This alone would suggest that, at the 95% confidence interval, we cannot state that there is a difference in tooth growth based on the supplement('supp') used.  The p-value = 0.06063 also confirms that a difference in tooth growth at 95% confidence is not achieved.
+
+### T-test: Difference in Tooth Growth by Supplement with a dose level
+We are focus on the difference in tooth growth produced by a supplement and dose level.  Before applying t.test(), we will subset data to reflect ths specified populations.  We will create 6 data subsets, each represent a specific supp and dose.  For example, vc05 represents data for the supp 'VC' at a 0.5 dose level.  Similarly, oj10 reprsents data for the supp 'OJ' and dose level of 1.0.
+
+##### T-test: Difference in Tooth Growth by Supplement with dose = 0.5
+```{r supp_dose05_difference, include = TRUE, echo = TRUE, results = "asis"}
+vc05 <- select(subset(ToothGrowth, supp == "VC" & dose == 0.5), supp, len)
+vc10 <- select(subset(ToothGrowth, supp == "VC" & dose == 1.0), supp, len)
+vc20 <- select(subset(ToothGrowth, supp == "VC" & dose == 2.0), supp, len)
+oj05 <- select(subset(ToothGrowth, supp == "OJ" & dose == 0.5), supp, len)
+oj10 <- select(subset(ToothGrowth, supp == "OJ" & dose == 1.0), supp, len)
+oj20 <- select(subset(ToothGrowth, supp == "OJ" & dose == 2.0), supp, len)
+
+t.test(vc05$len,oj05$len, paired = FALSE, var.equal = FALSE)
+```
+
+With the dose level = 0.5, the t value = -8.2374 falls between the 95% confidence interval [-13.496401, -8.170266].  This suggest that we cannot reject the NULL hypothesis that there is no difference in tooth growth between the two supplements.  The p-value = 5.924e-10 (0.0000000005924), however, would suggest a very low probability of making a Type 1 error.  Based on the p-value we might reject the NULL hypothesis.  As the test results do not both reject the NULL hypothesis, we will not reject it.
+
+##### T-test: Difference in Tooth Growth by Supplement with dose = 1.0
+```{r supp_dose10_difference, include = TRUE, echo = TRUE, results = "asis"}
+t.test(vc10$len,oj10$len, paired = FALSE, var.equal = FALSE)
+```
+
+At a dose level = 1.0, the test statistics provide a similar picture that observed at dose = 0.5.  The t-value = -4.0328 falls within the 95% confidence interval [ -9.057852, -2.802148].  Again, we would not reject the NULL hypothesis.  As with dose = 0.5, we see a very low p-value = 0.001038, suggesting that we reject the NULL hypothesis.  As both the confidence interval and p-value to not suggest we reject the NULL hypothesis, we will not reject the NULL hypothesis either.
+
+
+##### T-test: Difference in Tooth Growth by Supplement with dose = 2.0
+```{r supp_dose20_difference, include = TRUE, echo = TRUE, results = "asis"}
+t.test(vc20$len,oj20$len, paired = FALSE, var.equal = FALSE)
+```
+
+Based on the boxplot we would not expect that there is any significant difference in tooth growth at the dose = 2.0 level.  The test statistics confirm this believe.  The t-value = 0.046136 is almost right in the middle of the 95% confidence interval [-3.63807, 3.79807].  We also have a very high p-value = 0.9639.  Both statistics suggest that we not reject the NULL hypothesis.  We would agree and not reject the hypothesis that there is no difference in tooth growth produced by the two supplements at a dose = 2.0.
+
+### T-test: Difference in Tooth Growth due to dose
+The overall goal is to determine whether increasing the dose of a supplement('supp') results in greater tooth growth.  Because results are not different at the 95% confidence interval we might be able to compare data without regard to the type of supplement.  We have chose to look at the effects of dose within each supplement.
+
 
 
 
