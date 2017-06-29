@@ -125,64 +125,6 @@ $(document).ready(function () {
 
 <div id="packages-for-course-6-project-tooth-growth" class="section level2">
 <h2>Packages for Course 6 Project: Tooth Growth</h2>
-<pre><code>## Loading required package: plyr</code></pre>
-<pre><code>## Loading required package: dplyr</code></pre>
-<pre><code>## 
-## Attaching package: 'dplyr'</code></pre>
-<pre><code>## The following objects are masked from 'package:plyr':
-## 
-##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-##     summarize</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre><code>## Loading required package: data.table</code></pre>
-<pre><code>## -------------------------------------------------------------------------</code></pre>
-<pre><code>## data.table + dplyr code now lives in dtplyr.
-## Please library(dtplyr)!</code></pre>
-<pre><code>## -------------------------------------------------------------------------</code></pre>
-<pre><code>## 
-## Attaching package: 'data.table'</code></pre>
-<pre><code>## The following objects are masked from 'package:dplyr':
-## 
-##     between, first, last</code></pre>
-<pre><code>## Loading required package: dtplyr</code></pre>
-<pre><code>## Loading required package: lubridate</code></pre>
-<pre><code>## 
-## Attaching package: 'lubridate'</code></pre>
-<pre><code>## The following objects are masked from 'package:data.table':
-## 
-##     hour, isoweek, mday, minute, month, quarter, second, wday,
-##     week, yday, year</code></pre>
-<pre><code>## The following object is masked from 'package:plyr':
-## 
-##     here</code></pre>
-<pre><code>## The following object is masked from 'package:base':
-## 
-##     date</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## Loading required package: scales</code></pre>
-<pre><code>## Loading required package: reshape2</code></pre>
-<pre><code>## 
-## Attaching package: 'reshape2'</code></pre>
-<pre><code>## The following objects are masked from 'package:data.table':
-## 
-##     dcast, melt</code></pre>
-<pre><code>## Loading required package: knitr</code></pre>
-<pre><code>## Loading required package: R.cache</code></pre>
-<pre><code>## R.cache v0.12.0 (2015-11-12) successfully loaded. See ?R.cache for help.</code></pre>
-<pre><code>## Loading required package: stringr</code></pre>
-<pre><code>## Loading required package: gtools</code></pre>
-<pre><code>## Loading required package: quantreg</code></pre>
-<pre><code>## Loading required package: SparseM</code></pre>
-<pre><code>## 
-## Attaching package: 'SparseM'</code></pre>
-<pre><code>## The following object is masked from 'package:base':
-## 
-##     backsolve</code></pre>
 </div>
 <div id="overview" class="section level2">
 <h2>Overview</h2>
@@ -214,10 +156,11 @@ Max. :33.90 Max. :2.000</p>
 </div>
 <div id="unique-values-for-supp-and-dose" class="section level3">
 <h3>Unique values for ‘supp’ and ‘dose’</h3>
-<pre class="r"><code>unique(ToothGrowth$supp)</code></pre>
-<p>[1] VC OJ Levels: OJ VC</p>
-<pre class="r"><code>unique(ToothGrowth$dose)</code></pre>
-<p>[1] 0.5 1.0 2.0</p>
+<pre class="r"><code>unique(ToothGrowth$supp)
+unique(ToothGrowth$dose)</code></pre>
+<pre><code>## [1] VC OJ
+## Levels: OJ VC
+## [1] 0.5 1.0 2.0</code></pre>
 </div>
 <div id="boxplot-length-of-tooth-for-different-supplements-dosing-levels" class="section level3">
 <h3>Boxplot: Length of tooth for different supplements &amp; dosing levels</h3>
@@ -234,20 +177,29 @@ Max. :33.90 Max. :2.000</p>
 <p>As previously stated, there are two variables of interest, supplement(‘VC’, ‘OJ’) and dose(0.5, 1.0, and 2.0). Our initial testing will be to look at the supplement. There may be two questions to be answered here. First, does ‘OJ’ promote greater tooth growth than ‘VC’? This would be across all dosing levels. Once we answer this question, we may want to evaluate the supplement within each dosing level.</p>
 <div id="t-test-difference-in-tooth-growth-by-supplement" class="section level3">
 <h3>T-test: Difference in Tooth Growth by Supplement</h3>
-<p>The first step is to split data by supplement(‘supp’). We will use the t.test() function in R to evaluate whether the tooth length is longer when the supplement ‘OJ’ is used compared to ‘VC’ across all dose levels.</p>
+<p>The first step is to split data by supplement(‘supp’). We will use the t.test() function in R to evaluate whether the tooth length is longer when the supplement ‘OJ’ is used compared to ‘VC’ across all dose levels. The boxplot might indicate that the supplement ‘OJ’ promotes greater tooth growth than ‘VC’. We will use a one-sided (right) to evaluate</p>
 <pre class="r"><code>vc_ttl &lt;- select(subset(ToothGrowth, supp == &quot;VC&quot;), supp, len)
 oj_ttl &lt;- select(subset(ToothGrowth, supp == &quot;OJ&quot;), supp, len)
 
-t.test(vc_ttl$len,oj_ttl$len, paired = FALSE, var.equal = FALSE, alternative = &quot;two.sided&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: vc_ttl<span class="math inline">\(len and oj_ttl\)</span>len t = -1.9153, df = 55.309, p-value = 0.06063 alternative hypothesis: true difference in means is not equal to 0 95 percent confidence interval: -7.5710156 0.1710156 sample estimates: mean of x mean of y 16.96333 20.66333</p>
-<p>The result of this test is that t = -1.9153 falls within the 95% confidence interval of [-7.5710156, 0.1710156]. This alone would suggest that, at the 95% confidence interval, we cannot state that there is a difference in tooth growth based on the supplement(‘supp’) used. The p-value = 0.06063 also confirms that a difference in tooth growth at 95% confidence is not achieved.</p>
+t.test(oj_ttl$len,vc_ttl$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  oj_ttl$len and vc_ttl$len
+## t = 1.9153, df = 55.309, p-value = 0.03032
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  0.4682687       Inf
+## sample estimates:
+## mean of x mean of y 
+##  20.66333  16.96333</code></pre>
+<p>The t.test results in a p-value = 0.03032. As this is less than our target <span class="math inline">\(\alpha =\)</span> 0.05, we reject the NULL hypothesis that there is no significant difference in favor of the alternative hypothesis, <span class="math inline">\(H_a\)</span>, that ‘OJ’ promotes greater tooth growth than the supplement ‘VC’.</p>
 </div>
 <div id="t-test-difference-in-tooth-growth-by-supplement-with-a-dose-level" class="section level3">
 <h3>T-test: Difference in Tooth Growth by Supplement with a dose level</h3>
 <p>We are focus on the difference in tooth growth produced by a supplement and dose level. Before applying t.test(), we will subset data to reflect ths specified populations. We will create 6 data subsets, each represent a specific supp and dose. For example, vc05 represents data for the supp ‘VC’ at a 0.5 dose level. Similarly, oj10 reprsents data for the supp ‘OJ’ and dose level of 1.0.</p>
-<div id="t-test-difference-in-tooth-growth-by-supplement-with-dose-0.5" class="section level5">
-<h5>T-test: Difference in Tooth Growth by Supplement with dose = 0.5</h5>
+<div id="t-test-greater-tooth-growth-with-the-supplement-oj-versus-vc-at-dose-0.5" class="section level5">
+<h5>T-test: Greater Tooth Growth with the supplement ‘OJ’ versus ‘VC’ at dose = 0.5</h5>
 <pre class="r"><code>vc05 &lt;- select(subset(ToothGrowth, supp == &quot;VC&quot; &amp; dose == 0.5), supp, len)
 vc10 &lt;- select(subset(ToothGrowth, supp == &quot;VC&quot; &amp; dose == 1.0), supp, len)
 vc20 &lt;- select(subset(ToothGrowth, supp == &quot;VC&quot; &amp; dose == 2.0), supp, len)
@@ -256,23 +208,50 @@ oj10 &lt;- select(subset(ToothGrowth, supp == &quot;OJ&quot; &amp; dose == 1.0),
 oj20 &lt;- select(subset(ToothGrowth, supp == &quot;OJ&quot; &amp; dose == 2.0), supp, len)
 
 t.test(oj05$len,vc05$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: oj05<span class="math inline">\(len and vc05\)</span>len t = 3.1697, df = 14.969, p-value = 0.003179 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: 2.34604 Inf sample estimates: mean of x mean of y 13.23 7.98</p>
-<p>With the dose level = 0.5, the t value = -8.2374 falls between the 95% confidence interval [-13.496401, -8.170266]. This suggest that we cannot reject the NULL hypothesis that there is no difference in tooth growth between the two supplements. The p-value = 5.924e-10 (0.0000000005924), however, would suggest a very low probability of making a Type 1 error. Based on the p-value we might reject the NULL hypothesis. As the test results do not both reject the NULL hypothesis, we will not reject it.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  oj05$len and vc05$len
+## t = 3.1697, df = 14.969, p-value = 0.003179
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  2.34604     Inf
+## sample estimates:
+## mean of x mean of y 
+##     13.23      7.98</code></pre>
+<p>We are testing whether we would reject the NULL hypothesis that tooth growth for ‘VC’ and ‘OJ’ are similar at a dose = 0.5. The alternative hypothesis, <span class="math inline">\(H_a\)</span>, is that ‘OJ’ promotes greater tooth growth at dose = 0.5. Performing a t-test we obtained a p-value = 0.003179. This is less than our target <span class="math inline">\(\alpha =\)</span> 0.05 so we reject the NULL hypothesis in favor of the alternative hypothesis, supp ‘OJ’ promotes greater tooth growth than ‘VC’ at a dose = 0.05.</p>
 </div>
-<div id="t-test-difference-in-tooth-growth-by-supplement-with-dose-1.0" class="section level5">
-<h5>T-test: Difference in Tooth Growth by Supplement with dose = 1.0</h5>
+<div id="t-test-greater-tooth-growth-with-the-supplement-oj-versus-vc-at-dose-1.0" class="section level5">
+<h5>T-test: Greater Tooth Growth with the supplement ‘OJ’ versus ‘VC’ at dose = 1.0</h5>
 <pre class="r"><code>t.test(oj10$len,vc10$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: oj10<span class="math inline">\(len and vc10\)</span>len t = 4.0328, df = 15.358, p-value = 0.0005192 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: 3.356158 Inf sample estimates: mean of x mean of y 22.70 16.77</p>
-<p>At a dose level = 1.0, the test statistics provide a similar picture that observed at dose = 0.5. The t-value = -4.0328 falls within the 95% confidence interval [ -9.057852, -2.802148]. Again, we would not reject the NULL hypothesis. As with dose = 0.5, we see a very low p-value = 0.001038, suggesting that we reject the NULL hypothesis. As both the confidence interval and p-value to not suggest we reject the NULL hypothesis, we will not reject the NULL hypothesis either.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  oj10$len and vc10$len
+## t = 4.0328, df = 15.358, p-value = 0.0005192
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  3.356158      Inf
+## sample estimates:
+## mean of x mean of y 
+##     22.70     16.77</code></pre>
+<p>At a dose = 0.5, the t.test calculated p-value = 0.0005192 is very small, well below the threshold <span class="math inline">\(\alpha =\)</span> 0.05. We reject the NULL hypothesis in favor of the alternative hypothesis, <span class="math inline">\(H_a\)</span>: <span class="math inline">\(\mu_{oj}\)</span> &gt; <span class="math inline">\(\mu_{vc}\)</span>, that the supplement ‘OJ’ promotes greater tooth growth than the supplement’VC’.</p>
 </div>
 <div id="t-test-difference-in-tooth-growth-by-supplement-with-dose-2.0" class="section level5">
 <h5>T-test: Difference in Tooth Growth by Supplement with dose = 2.0</h5>
 <pre class="r"><code>t.test(oj20$len,vc20$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: oj20<span class="math inline">\(len and vc20\)</span>len t = -0.046136, df = 14.04, p-value = 0.5181 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: -3.1335 Inf sample estimates: mean of x mean of y 26.06 26.14</p>
-<p>Based on the boxplot we would not expect that there is any significant difference in tooth growth at the dose = 2.0 level. The test statistics confirm this believe. The t-value = 0.046136 is almost right in the middle of the 95% confidence interval [-3.63807, 3.79807]. We also have a very high p-value = 0.9639. Both statistics suggest that we not reject the NULL hypothesis. We would agree and not reject the hypothesis that there is no difference in tooth growth produced by the two supplements at a dose = 2.0.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  oj20$len and vc20$len
+## t = -0.046136, df = 14.04, p-value = 0.5181
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  -3.1335     Inf
+## sample estimates:
+## mean of x mean of y 
+##     26.06     26.14</code></pre>
+<p>Our final t.test, comparing tooth growth for supplements ‘OJ’ and ‘VC’, reflects a dose = 2.0. If you recall, the boxplot might suggest that there is no significant different in the mean tooth growth for the two supplements. The t.test, p-value = 0.5181 is rather larger, well above the threshold <span class="math inline">\(\alpha =\)</span> 0.05. We accept the NULL hypothesis which is consistent with what we expected by looking at our boxplot.</p>
 </div>
 </div>
 <div id="t-test-difference-in-tooth-growth-due-to-dose" class="section level3">
@@ -281,40 +260,107 @@ t.test(oj05$len,vc05$len, paired = FALSE, var.equal = FALSE, alternative = &quot
 <div id="tooth-growth-supp-oj-by-comparing-dose-0.5-2.0" class="section level5">
 <h5>Tooth Growth: Supp (‘OJ’) by comparing dose [0.5, 2.0]</h5>
 <pre class="r"><code>t.test(oj20$len,oj05$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: oj20<span class="math inline">\(len and oj05\)</span>len t = 7.817, df = 14.668, p-value = 6.619e-07 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: 9.94845 Inf sample estimates: mean of x mean of y 26.06 13.23</p>
-<p>For supp = ‘OJ’, this test does suggest that we reject the NULL hypothesis that there is no difference in tooth growth between the dose levels, 0.5 &amp; 2.0. The t value = -7.817 falls outside the 95% confidence interval range [-16.335421, -9.324759]. Additionally, we have a p-value = 1.324e-06 (0.000001324). Both statistics indicate a rejection of teh NULL hypothesis</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  oj20$len and oj05$len
+## t = 7.817, df = 14.668, p-value = 6.619e-07
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  9.94845     Inf
+## sample estimates:
+## mean of x mean of y 
+##     26.06     13.23</code></pre>
+<p>In this test, we seek to evaluate whether, for the supplement ‘OJ’, a dose = 2.0 promotes greater tooth growth than a dose = 0.05. Base on t.test p-value = 6.619e-07 (0.0000006619), very small, we reject the NULL hypothesis that there is no difference in tooth growth between the dose levels, 0.5 &amp; 2.0. In other words, the t.test results suggest that there is greater tooth growth with a dose = 2.0 versus a dose = 0.5.</p>
 </div>
 <div id="tooth-growth-supp-vc-by-comparing-dose-0.5-2.0" class="section level5">
 <h5>Tooth Growth: Supp (‘VC’) by comparing dose [0.5, 2.0]</h5>
 <pre class="r"><code>t.test(vc20$len,vc05$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: vc20<span class="math inline">\(len and vc05\)</span>len t = 10.388, df = 14.327, p-value = 2.341e-08 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: 15.08583 Inf sample estimates: mean of x mean of y 26.14 7.98</p>
-<p>Results for the supplement = ‘VC’ are consistent with ‘OJ’. The t-value = -10.388 clearly lies outside the 95% confidence interval [-21.90151, -14.41849]. This, along with p-value = 4.682e-08 (0.00000004682), suggest that we reject the NULL hypothesis. Again, this confirms that, at a 95% confidence level, there is a difference between tooth growth at a dose = 0.5 and 2.0.</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  vc20$len and vc05$len
+## t = 10.388, df = 14.327, p-value = 2.341e-08
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  15.08583      Inf
+## sample estimates:
+## mean of x mean of y 
+##     26.14      7.98</code></pre>
+<p>Results for the supplement = ‘VC’ are consistent with ‘OJ’. With a p-value = 4.682e-08 (0.00000004682), also very small, we reject the NULL hypothesis. Again, this confirms that, at a 95% confidence level, there is greater tooth growth associated with the supplement ‘VC’ at a dose = 2.0 versus a dose = 0.5.</p>
 </div>
-<div id="tooth-growth-significant-at-dose-levels" class="section level4">
-<h4>Tooth Growth: Significant at dose levels?</h4>
-<p>Although it appears to be clear that there is greater tooth growth between the lower dose = 0.5 and the highest dose = 2.0, we want to compare growth for the interim dose levels, between 0.5 - 1.0; 1.0 - 2.0.</p>
-<div id="tooth-growth-supp-oj-by-comparing-interim-dose" class="section level5">
-<h5>Tooth Growth: Supp (‘OJ’) by comparing interim dose</h5>
+<div id="tooth-growth-significant-for-interim-dose-levels" class="section level4">
+<h4>Tooth Growth: Significant for interim dose levels</h4>
+<p>Although it appears to be clear that there is greater tooth growth for a higher dose, 2.0 versus 0.5, of either supplement, ‘VC’ and ‘OJ’, we wish to determine whether tooth growth is greater for interim dose levels (e.g. dose = 1.0 versus dose = 0.5 and does = 2.0 versus dose = 1.0).</p>
+<div id="tooth-growth-supp-oj-by-comparing-interim-dose-1.0-versus-0.5" class="section level5">
+<h5>Tooth Growth: Supp (‘OJ’) by comparing interim dose [1.0 versus 0.5]</h5>
 <pre class="r"><code>t.test(oj10$len,oj05$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: oj10<span class="math inline">\(len and oj05\)</span>len t = 5.0486, df = 17.698, p-value = 4.392e-05 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: 6.214316 Inf sample estimates: mean of x mean of y 22.70 13.23</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  oj10$len and oj05$len
+## t = 5.0486, df = 17.698, p-value = 4.392e-05
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  6.214316      Inf
+## sample estimates:
+## mean of x mean of y 
+##     22.70     13.23</code></pre>
+</div>
+<div id="tooth-growth-supp-oj-by-comparing-interim-dose-2.0-versus-1.0" class="section level5">
+<h5>Tooth Growth: Supp (‘OJ’) by comparing interim dose [2.0 versus 1.0]</h5>
 <pre class="r"><code>t.test(oj20$len,oj10$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: oj20<span class="math inline">\(len and oj10\)</span>len t = 2.2478, df = 15.842, p-value = 0.0196 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: 0.7486236 Inf sample estimates: mean of x mean of y 26.06 22.70</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  oj20$len and oj10$len
+## t = 2.2478, df = 15.842, p-value = 0.0196
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  0.7486236       Inf
+## sample estimates:
+## mean of x mean of y 
+##     26.06     22.70</code></pre>
+<p>For the supplement ‘OJ’, the p-value for each of the interim dose increases are below our threshold of <span class="math inline">\(\alpha =\)</span> 0.05, 4.392e-05 (0.00004392) and 0.0196, respectively. We reject the NULL hypothesis for both incremental dose levels. Tooth growth associated with the higher dose of the supplement ‘OJ’ is greater than the lower dose of the supplement ‘OJ’.</p>
 </div>
-<div id="tooth-growth-supp-vc-by-comparing-interim-dose" class="section level5">
-<h5>Tooth Growth: Supp (‘VC’) by comparing interim dose</h5>
+<div id="tooth-growth-supp-vc-by-comparing-interim-dose-1.0-versus-0.5" class="section level5">
+<h5>Tooth Growth: Supp (‘VC’) by comparing interim dose [1.0 versus 0.5]</h5>
 <pre class="r"><code>t.test(vc10$len,vc05$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: vc10<span class="math inline">\(len and vc05\)</span>len t = 7.4634, df = 17.862, p-value = 3.406e-07 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: 6.746867 Inf sample estimates: mean of x mean of y 16.77 7.98</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  vc10$len and vc05$len
+## t = 7.4634, df = 17.862, p-value = 3.406e-07
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  6.746867      Inf
+## sample estimates:
+## mean of x mean of y 
+##     16.77      7.98</code></pre>
+</div>
+<div id="tooth-growth-supp-vc-by-comparing-interim-dose-2.0-versus-1.0" class="section level5">
+<h5>Tooth Growth: Supp (‘VC’) by comparing interim dose [2.0 versus 1.0]</h5>
 <pre class="r"><code>t.test(vc20$len,vc10$len, paired = FALSE, var.equal = FALSE, alternative = &quot;greater&quot;)</code></pre>
-<pre><code>Welch Two Sample t-test</code></pre>
-<p>data: vc20<span class="math inline">\(len and vc10\)</span>len t = 5.4698, df = 13.6, p-value = 4.578e-05 alternative hypothesis: true difference in means is greater than 0 95 percent confidence interval: 6.346525 Inf sample estimates: mean of x mean of y 26.14 16.77</p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  vc20$len and vc10$len
+## t = 5.4698, df = 13.6, p-value = 4.578e-05
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  6.346525      Inf
+## sample estimates:
+## mean of x mean of y 
+##     26.14     16.77</code></pre>
+<p>For the supplement ‘VC’, similar to results for the supplement ‘OJ’, the p-value for each of the interim dose increases are below our threshold of <span class="math inline">\(\alpha =\)</span> 0.05, 3.406e-07 (0.0000003406) and 4.578e-05 (0.00004578), respectively. We reject the NULL hypothesis for both incremental dose levels. Tooth growth associated with the higher dose of the supplement ‘VC’ is greater than the lower dose of the supplement ‘VC’.</p>
 </div>
 </div>
 </div>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>Following our review of Exploratory Data Analysis, it was decided to test two assumptions. From the boxplot, it appeared that the supplement ‘OJ’ promoted greater tooth growth than the supplement ‘VC’. It was also apparent that a higher dose promoted greater tooth growth, regardless of supplement introduced. We chose to test these assumptions by setting NULL hypothesis that there was no difference in the tooth growth for supplement ‘OJ’ versus ‘VC’ and a higher dose versus lower dose. The alternative hypothesis being that ‘OJ’ promotes greater tooth growth than ‘VC’ and a higher dose promotes greater tooth growth than a lower dose.</p>
+<p>From our t.test, the p-values were rather small, with the exception of testing whether ‘OJ’ promotes greater tooth growth than ‘VC’ at a dose = 2.0, indicating that we reject the NULL hypothesis. In summary, the analysis suggests that ‘OJ’ promotes greater tooth growth than ‘VC’. Additionally, regardless of the supplement selected, ‘OJ’ or ‘VC’, a higher dose of the supplement promotes greater tooth growth than lower dose.</p>
 </div>
 
 

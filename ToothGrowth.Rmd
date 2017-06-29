@@ -61,7 +61,7 @@ Looking at information from the exploratory data analysis, there are two key obs
 As previously stated, there are two variables of interest, supplement('VC', 'OJ') and dose(0.5, 1.0, and 2.0).  Our initial testing will be to look at the supplement.  There may be two questions to be answered here.  First, does 'OJ' promote greater tooth growth than 'VC'?  This would be across all dosing levels.  Once we answer this question, we may want to evaluate the supplement within each dosing level.
 
 ### T-test: Difference in Tooth Growth by Supplement
-The first step is to split data by supplement('supp').  We will use the t.test() function in R to evaluate whether the tooth length is longer when the supplement 'OJ' is used compared to 'VC' across all dose levels.  The boxplot might indicate that the supplement 'OJ' promotes greater tooth growth than 'VC'.  We will use a one-sides (right) to evaluate
+The first step is to split data by supplement('supp').  We will use the t.test() function in R to evaluate whether the tooth length is longer when the supplement 'OJ' is used compared to 'VC' across all dose levels.  The boxplot might indicate that the supplement 'OJ' promotes greater tooth growth than 'VC'.  We will use a one-sided (right) to evaluate
 ```{r supp_ttl_difference, include = TRUE, echo = TRUE, results = "hold"}
 vc_ttl <- select(subset(ToothGrowth, supp == "VC"), supp, len)
 oj_ttl <- select(subset(ToothGrowth, supp == "OJ"), supp, len)
@@ -69,7 +69,7 @@ oj_ttl <- select(subset(ToothGrowth, supp == "OJ"), supp, len)
 t.test(oj_ttl$len,vc_ttl$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
-The result of this test is that t = 1.9153 falls within the 95% confidence interval of [0.4682687, Inf] and a p-value = 0.03032. These statistics indicate that we reject a NULL hypothesis that there is no significant difference in favor of the alternative hypothesis, $H_a$, that 'OJ' promotes greater tooth growth than 'VC', at a 95% confidence interval.
+The t.test results in a p-value = 0.03032. As this is less than our target $\alpha =$ 0.05, we reject the NULL hypothesis that there is no significant difference in favor of the alternative hypothesis, $H_a$, that 'OJ' promotes greater tooth growth than the supplement 'VC'.
 
 ### T-test: Difference in Tooth Growth by Supplement with a dose level
 We are focus on the difference in tooth growth produced by a supplement and dose level.  Before applying t.test(), we will subset data to reflect ths specified populations.  We will create 6 data subsets, each represent a specific supp and dose.  For example, vc05 represents data for the supp 'VC' at a 0.5 dose level.  Similarly, oj10 reprsents data for the supp 'OJ' and dose level of 1.0.
@@ -86,14 +86,14 @@ oj20 <- select(subset(ToothGrowth, supp == "OJ" & dose == 2.0), supp, len)
 t.test(oj05$len,vc05$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
-We are testing whether we would reject the NULL hypothesis that tooth growth for 'VC' and 'OJ' are similar at a dose = 0.5.  The alternative hypothesis, $H_a$, is that 'OJ' promotes greater tooth growth at dose = 0.5.  Performing a t-test produced the following statistics: t = 3.1697 falls between the 95% confidence interval [2.34604, Inf] and a p-value = 0.003179. Both statistics suggest that we reject the NULL hypothesis in favor of the alternative hypothesis, supp 'OJ' promotes greater tooth growth than 'VC'.  We recommend that the NULL hypothesis is rejected.
+We are testing whether we would reject the NULL hypothesis that tooth growth for 'VC' and 'OJ' are similar at a dose = 0.5.  The alternative hypothesis, $H_a$, is that 'OJ' promotes greater tooth growth at dose = 0.5.  Performing a t-test we obtained a p-value = 0.003179. This is less than our target $\alpha =$ 0.05 so we reject the NULL hypothesis in favor of the alternative hypothesis, supp 'OJ' promotes greater tooth growth than 'VC' at a dose = 0.05.
 
 ##### T-test: Greater Tooth Growth with the supplement 'OJ' versus 'VC' at dose = 1.0
 ```{r supp_dose10_difference, include = TRUE, echo = TRUE, results = "hold"}
 t.test(oj10$len,vc10$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
-As with dose = 0.5, we are testing the NULL hypothesis that tooth growth for the supplements 'OJ' and 'VC' are not significantly different for a dose = 1.0.  The alternative hypothesis, $H_a$, is that 'OJ' promotes greater tooth growth than 'VC'.  The t-test statistics include: t = 4.0328 with confidence interval [3.356258, Inf] and p-value = 0.0005192.  Both statistics suggest that the NULL hypothesis be rejected in favor of the alternative hypothesis that the supplement 'OJ' promotes greater tooth growth than 'VC'.  We recommend that the NULL hypothesis be rejected.
+At a dose = 0.5, the t.test calculated p-value = 0.0005192 is very small, well below the threshold $\alpha =$ 0.05. We reject the NULL hypothesis in favor of the alternative hypothesis, $H_a$: $\mu_{oj}$ > $\mu_{vc}$, that the supplement 'OJ' promotes greater tooth growth than the supplement'VC'.
 
 
 ##### T-test: Difference in Tooth Growth by Supplement with dose = 2.0
@@ -101,7 +101,7 @@ As with dose = 0.5, we are testing the NULL hypothesis that tooth growth for the
 t.test(oj20$len,vc20$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
-Based on the boxplot we would not expect that there is any significant difference in tooth growth at the dose = 2.0 level.  The test statistics confirm this belief.  With t = -0.046136, it falls within the 95% confidence interval [-3.1335, Inf].  The p-value = 0.5181.  Using the t-value alone, you might recommend rejecting the NULL hypothesis that tooth growth for 'OJ' and "VC' using dose = 2.0 is not significantly different.  The p-value, however, suggest that we accept the NULL hypothesis.  Based on the results of t.test, we recommend that the NULL hypothesis be accepted.
+Our final t.test, comparing tooth growth for supplements 'OJ' and 'VC', reflects a dose = 2.0.  If you recall, the boxplot might suggest that there is no significant different in the mean tooth growth for the two supplements.  The t.test, p-value =  0.5181 is rather larger, well above the threshold $\alpha =$ 0.05. We accept the NULL hypothesis which is consistent with what we expected by looking at our boxplot.
 
 ### T-test: Difference in Tooth Growth due to dose
 The overall goal is to determine whether increasing the dose of a supplement('supp') results in greater tooth growth.  Because results are not different at the 95% confidence interval we might be able to compare data without regard to the type of supplement.  We have elected to look at the effects of dose within each supplement. For each supplement, separately, we will compare tooth length for the different dose levels.  The initial comparison is tooth length with a dose = 2.0 to a dose = 0.5.
@@ -111,8 +111,7 @@ The overall goal is to determine whether increasing the dose of a supplement('su
 t.test(oj20$len,oj05$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
-A couple statistics from the t.test.  A t = 7.817 with a confidence interval [9.94845, Inf] and p-value = 6.619e-07 (0.0000006619)
-For supp = 'OJ', this test does suggest that we reject the NULL hypothesis that there is no difference in tooth growth between the dose levels, 0.5 & 2.0.  The t value = -7.817 falls outside the 95% confidence interval range [-16.335421, -9.324759]. Additionally, we have a p-value = 1.324e-06 (0.000001324).  Both statistics indicate a rejection of teh NULL hypothesis
+In this test, we seek to evaluate whether, for the supplement 'OJ', a dose = 2.0 promotes greater tooth growth than a dose = 0.05.  Base on t.test p-value = 6.619e-07 (0.0000006619), very small, we reject the NULL hypothesis that there is no difference in tooth growth between the dose levels, 0.5 & 2.0.  In other words, the t.test results suggest that there is greater tooth growth with a dose = 2.0 versus a dose = 0.5.
 
 
 ##### Tooth Growth: Supp ('VC') by comparing dose [0.5, 2.0]
@@ -120,26 +119,37 @@ For supp = 'OJ', this test does suggest that we reject the NULL hypothesis that 
 t.test(vc20$len,vc05$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
-Results for the supplement = 'VC' are consistent with 'OJ'.   t-value = 10.388 clearly lies outside the 95% confidence interval [-21.90151, -14.41849]. This, along with p-value = 4.682e-08 (0.00000004682), suggest that we reject the NULL hypothesis.  Again, this confirms that, at a 95% confidence level, there is a difference between tooth growth at a dose = 0.5 and 2.0.
+Results for the supplement = 'VC' are consistent with 'OJ'.   With a p-value = 4.682e-08 (0.00000004682), also very small, we reject the NULL hypothesis.  Again, this confirms that, at a 95% confidence level, there is greater tooth growth associated with the supplement 'VC' at a dose = 2.0 versus a dose = 0.5.
 
-#### Tooth Growth:  Significant at dose levels?
-Although it appears to be clear that there is greater tooth growth between the lower dose = 0.5 and the highest dose = 2.0, we want to compare growth for the interim dose levels, between 0.5 - 1.0; 1.0 - 2.0.
+#### Tooth Growth:  Significant for interim dose levels
+Although it appears to be clear that there is greater tooth growth for a higher dose, 2.0 versus 0.5, of either supplement, 'VC' and 'OJ', we wish to determine whether tooth growth is greater for interim dose levels (e.g. dose = 1.0 versus dose = 0.5 and does = 2.0 versus dose = 1.0).
 
-##### Tooth Growth: Supp ('OJ') by comparing interim dose
+##### Tooth Growth: Supp ('OJ') by comparing interim dose [1.0 versus 0.5]
 ```{r tooth_growth_dose_interim1_oj, include = TRUE, echo = TRUE, results = "hold"}
 t.test(oj10$len,oj05$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
+##### Tooth Growth: Supp ('OJ') by comparing interim dose [2.0 versus 1.0]
 ```{r tooth_growth_dose_interim2_oj, include = TRUE, echo = TRUE, results = "hold"}
 t.test(oj20$len,oj10$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
+For the supplement 'OJ', the p-value for each of the interim dose increases are below our threshold of $\alpha =$ 0.05, 4.392e-05 (0.00004392) and 0.0196, respectively.  We reject the NULL hypothesis for both incremental dose levels.  Tooth growth associated with the higher dose of the supplement 'OJ' is greater than the lower dose of the supplement 'OJ'.
 
-##### Tooth Growth: Supp ('VC') by comparing interim dose
+##### Tooth Growth: Supp ('VC') by comparing interim dose [1.0 versus 0.5]
 ```{r tooth_growth_dose_interim1_vc, include = TRUE, echo = TRUE, results = "hold"}
 t.test(vc10$len,vc05$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
 
+##### Tooth Growth: Supp ('VC') by comparing interim dose [2.0 versus 1.0]
 ```{r tooth_growth_dose_interim2_vc, include = TRUE, echo = TRUE, results = "hold"}
 t.test(vc20$len,vc10$len, paired = FALSE, var.equal = FALSE, alternative = "greater")
 ```
+
+For the supplement 'VC', similar to results for the supplement 'OJ', the p-value for each of the interim dose increases are below our threshold of $\alpha =$ 0.05, 3.406e-07 (0.0000003406) and 4.578e-05 (0.00004578), respectively.  We reject the NULL hypothesis for both incremental dose levels.  Tooth growth associated with the higher dose of the supplement 'VC' is greater than the lower dose of the supplement 'VC'.
+
+## Conclusion
+Following our review of Exploratory Data Analysis, it was decided to test two assumptions.  From the boxplot, it appeared that the supplement 'OJ' promoted greater tooth growth than the supplement 'VC'.  It was also apparent that a higher dose promoted greater tooth growth, regardless of supplement introduced.  We chose to test these assumptions by setting NULL hypothesis that there was no difference in the tooth growth for supplement 'OJ' versus 'VC' and a higher dose versus lower dose.  The alternative hypothesis being that 'OJ' promotes greater tooth growth than 'VC' and a higher dose promotes greater tooth growth than a lower dose.
+
+From our t.test, the p-values were rather small, with the exception of testing whether 'OJ' promotes greater tooth growth than 'VC' at a dose = 2.0, indicating that we reject the NULL hypothesis.  In summary, the analysis suggests that 'OJ' promotes greater tooth growth than 'VC'.  Additionally, regardless of the supplement selected, 'OJ' or 'VC', a higher dose of the supplement promotes greater tooth growth than lower dose.
+
